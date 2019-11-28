@@ -1,0 +1,29 @@
+﻿@model IEnumerable<AskMe.Models.Comment>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Comments:</h2>
+
+<p>
+    @Html.ActionLink("Add New Comment", "Create",new { id = ViewBag.AnswerId})
+</p>
+
+  @foreach (var item in Model)
+  {
+    <div class="card bg-light m-1">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-9">
+            <p class="card-text">
+              @item.CommentText
+            </p>
+          </div>
+          <div class="col-md-3">
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) | @Html.ActionLink("Details", "Details", new { id = item.Id }) | @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+          </div>
+        </div>
+      </div>
+    </div>
+  }

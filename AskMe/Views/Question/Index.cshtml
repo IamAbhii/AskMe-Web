@@ -1,0 +1,82 @@
+﻿@model AskMe.Models.ViewModel.QuestionListViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Questions</h2>
+
+
+@using (Html.BeginForm(new { @class = "form-inline" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-8">
+            @Html.LabelFor(m => m.TagsId, "Search Question by Tags", new { @class = "col-md-6 control-label" })
+            @Html.ListBoxFor(m => m.TagsId, new MultiSelectList(Model.Tags, "Id", "Name"), new { @class = "form-control select-multiple", multiple = "multiple" })
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            <input type="submit" value="Search By Tag" class="btn btn-outline-primary" />
+        </div>
+    </div>
+}
+
+<div id="paginationContainer">
+  @foreach (var item in Model.Questions)
+  {
+    <div class="card bg-light m-1">
+      <div class="card-body">
+        <h5 class="card-title">@Html.ActionLink(item.Post.Title, "QuestionDetails", new { Id = item.PostId })</h5>
+        <div class="row">
+          <div class="col-md-11">
+            <p class="card-text">
+              @foreach (var tag in item.Tags)
+              {
+                <span class="badge badge-secondary">@tag.Name</span>
+              }
+            </p>
+            <p class="card-text"><small class="text-muted">Asked on: @item.Post.CreatedTime</small></p>
+          </div>
+          <div id="vote" class="col">
+            <div>
+              <a data-vote-id="" class="nav-link thumbs-up" href=""><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+            </div>
+            <div>
+
+            </div>
+            <div>
+              <a class="nav-link thumbs-down" href=""><i class="fa fa-thumbs-down" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      @Html.HiddenFor(m => m.CurrentUserId)
+    </div>
+  }
+</div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col text-center mt-3">@Html.ActionLink("AskMe Something!", "CreateQuestion", "Question", null, new { @class = "btn btn-outline-primary" })</div>
+    <div class="col"></div>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".select-multiple").select2({
+        tags: true,
+      });
+
+      $("#vote .thumbs-up").on("click", function () {
+        $.ajax({
+          url: "api/views/"
+        })
+      })
+      $('#paginationContainer').buzinaPagination({
+        itemsOnPage: 5,
+        prevnext: true,
+        prevText: "Previous",
+        nextText: "Next"
+      });
+    });
+  </script>
+
