@@ -16,10 +16,10 @@ namespace AskMe.API
     {
       var user = _context.Users.Find(User.Identity.GetUserId());
       var post = _context.Posts.Find(id);
-      var votes = post.Votes.ToList();
+      var votes = post.UpVotes.ToList();
       if (votes.FindAll(u => u.UserId == user.Id).Count == 0)
       {
-        Votes vote = new Votes
+        UpVotes vote = new UpVotes
         {
           VotedDateTime = DateTime.Now,
           UserId = user.Id,
@@ -27,7 +27,7 @@ namespace AskMe.API
           Post = post,
           PostId = id,
         };
-        post.Votes.Add(vote);
+        post.UpVotes.Add(vote);
         _context.SaveChanges();
         return Ok();
       }
@@ -38,11 +38,11 @@ namespace AskMe.API
     {
       var user = _context.Users.Find(User.Identity.GetUserId());
       var post = _context.Posts.Find(id);
-      var votes = post.Votes.ToList();
+      var votes = post.DownVotes.ToList();
       if (votes.FindAll(u => u.UserId == user.Id).Count == 1)
       {
-        var voteInDb = _context.Votes.Where(v => v.PostId == id && v.UserId == user.Id).FirstOrDefault();
-        _context.Votes.Remove(voteInDb);
+        var voteInDb = _context.DownVotes.Where(v => v.PostId == id && v.UserId == user.Id).FirstOrDefault();
+        _context.DownVotes.Remove(voteInDb);
         _context.SaveChanges();
         return Ok();
       }
