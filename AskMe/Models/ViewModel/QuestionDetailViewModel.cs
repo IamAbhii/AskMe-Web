@@ -4,11 +4,9 @@ namespace AskMe.Models.ViewModel
 {
     public class QuestionDetailViewModel
     {
-        public QuestionDetailViewModel()
-        {
-            VoteCount = 0;
-        }
-        public Question Question { get; set; }
+        ApplicationDbContext _context = new ApplicationDbContext();
+ 
+        public virtual Question question { get; set; }
         [Display(Name = "Add your answer.")]
         public string AnswerContent { get; set; }
         public string UserId { get; set; }

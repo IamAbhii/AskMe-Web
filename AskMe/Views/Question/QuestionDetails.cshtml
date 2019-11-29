@@ -1,107 +1,108 @@
 ﻿@model AskMe.Models.ViewModel.QuestionDetailViewModel
 
 @{
-  ViewBag.Title = "QuestionDetails";
+    ViewBag.Title = "QuestionDetails";
 }
 
 <h1>Question Details: </h1>
-<h3>@Model.Question.Post.Title</h3>
-@Html.Raw(Model.Question.Post.Content)
+<h3>@Model.question.Post.Title</h3>
+@Html.Raw(Model.question.Post.Content)
 <hr />
 <h3>Answers:</h3>
 <div id="paginationContainer">
-  @foreach (var answer in Model.Question.Answers)
-  {
-    <div class="card bg-light m-1">
-      <div class="card-body">
-        <h5 class="card-title">Answered by: @answer.Post.CreatedBy.UserName</h5>
-        @Html.Raw(answer.Post.Content)
-      </div>
-      <div id="vote" class="col">
-        <div>
-          <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-up" href=""><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+    @foreach (var answer in Model.question.Answers)
+    {
+        <div class="card bg-light m-1">
+            <div class="card-body">
+                <h5 class="card-title">Answered by: @answer.Post.CreatedBy.UserName</h5>
+                @Html.Raw(answer.Post.Content)
+            </div>
+            <div class="col vote">
+                <div>
+                    <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-up" href=""><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                </div>
+                <div class="Count">
+                    @(answer.Post.UpVotes.Count-answer.Post.DownVotes.Count)
+                </div>
+                <div>
+                    <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-down" href=""><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            @Html.ActionLink("View Comments", "Index", "Comments", new { answerId = answer.PostId }, null) |
         </div>
-        <div id="Count">
-          @Model.VoteCount
-        </div>
-        <div>
-          <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-down" href=""><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
-        </div>
-      </div>
-      @Html.ActionLink("View Comments", "Index", "Comments", new { answerId = answer.PostId }, null) |
-    </div>
-  }
+    }
 </div>
 @using (Html.BeginForm())
 {
 
-  @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-  <div class="form-horizontal">
-    <h3>Contribute your answer: </h3>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <h3>Contribute your answer: </h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-      @Html.LabelFor(m => m.AnswerContent, new { @class = "col-md-2 control-label" })
-      <div class="col-md-10">
-        @Html.TextAreaFor(m => m.AnswerContent, new { @class = "form-control" })
-      </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AnswerContent, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.AnswerContent, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.HiddenFor(m => m.UserId)
+                @Html.HiddenFor(m => m.QuestionId)
+                @Html.HiddenFor(m => m.question)
+                <input type="submit" value="Contribute now" class="btn btn-outline-primary" />
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-      <div class="col-md-offset-2 col-md-10">
-        @Html.HiddenFor(m => m.UserId)
-        @Html.HiddenFor(m => m.QuestionId)
-        <input type="submit" value="Contribute now" class="btn btn-outline-primary" />
-      </div>
-    </div>
-  </div>
 }
 @section Scripts {
-  @Scripts.Render("~/bundles/jqueryval");
+    @Scripts.Render("~/bundles/jqueryval");
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      tinyMCE.init({
-        mode: "textareas",
-      });
-      $('#paginationContainer').buzinaPagination({
-        itemsOnPage: 3,
-        prevnext: true,
-        prevText: "Previous",
-        nextText: "Next"
-      });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            tinyMCE.init({
+                mode: "textareas",
+            });
+            $('#paginationContainer').buzinaPagination({
+                itemsOnPage: 3,
+                prevnext: true,
+                prevText: "Previous",
+                nextText: "Next"
+            });
 
-      $("#vote").on("click", ".thumbs-up", function () {
+            $(".vote").on("click", ".thumbs-up", function () {
 
-        $.ajax({
-          url: "/api/votes/upvote/" + $(this).attr("data-vote-id"),
-          method: "POST",
-          success: function () {
-            var countTxt = $("#Count").text();
-            console.log(countTxt);
-            var count = parseInt(countTxt);
-            $("#Count").text(count + 1);
-            console.log(count);
-          }
-        })
-      })
+                $.ajax({
+                    url: "/api/votes/upvote/" + $(this).attr("data-vote-id"),
+                    method: "POST",
+                    success: function () {
+                        var countTxt = $(".Count").text();
+                        console.log(countTxt);
+                        var count = parseInt(countTxt);
+                        $(".Count").text(count + 1);
+                        console.log(count);
+                    }
+                })
+            })
 
-      $("#vote").on("click", ".thumbs-down", function () {
+            $(".vote").on("click", ".thumbs-down", function () {
 
-        $.ajax({
-          url: "/api/votes/downvote/" + $(this).attr("data-vote-id"),
-          method: "POST",
-          success: function () {
-            var countTxt = $("#Count").text();
-            console.log(countTxt);
-            var count = parseInt(countTxt);
-            $("#Count").text(count - 1);
-            console.log(count);
-          }
-        })
-      })
-    });
-  </script>
+                $.ajax({
+                    url: "/api/votes/downvote/" + $(this).attr("data-vote-id"),
+                    method: "POST",
+                    success: function () {
+                        var countTxt = $(".Count").text();
+                        console.log(countTxt);
+                        var count = parseInt(countTxt);
+                        $(".Count").text(count - 1);
+                        console.log(count);
+                    }
+                })
+            })
+        });
+    </script>
 }
