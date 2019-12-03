@@ -75,30 +75,30 @@
             });
 
             $(".vote").on("click", ".thumbs-up", function () {
-
+                var counter = $(this).closest(".vote").children(".Count");
                 $.ajax({
                     url: "/api/votes/upvote/" + $(this).attr("data-vote-id"),
                     method: "POST",
                     success: function () {
-                        var countTxt = $(".Count").text();
+                        var countTxt = counter.text();
                         console.log(countTxt);
                         var count = parseInt(countTxt);
-                        $(".Count").text(count + 1);
+                         counter.text(count + 1);
                         console.log(count);
                     }
                 })
             })
 
             $(".vote").on("click", ".thumbs-down", function () {
-
+                var counter = $(this).closest(".vote").children(".Count");
                 $.ajax({
                     url: "/api/votes/downvote/" + $(this).attr("data-vote-id"),
                     method: "POST",
                     success: function () {
-                        var countTxt = $(".Count").text();
+                        var countTxt = counter.text();
                         console.log(countTxt);
                         var count = parseInt(countTxt);
-                        $(".Count").text(count - 1);
+                         counter.text(count - 1);
                         console.log(count);
                     }
                 })
