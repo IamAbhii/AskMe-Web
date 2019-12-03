@@ -36,6 +36,19 @@ namespace AskMe.API
                     PostId = id,
                 };
                 post.UpVotes.Add(upVote);
+                var repCount = post.UpVotes.Count - post.DownVotes.Count;
+                if (repCount <= 2)
+                {
+                    post.CreatedBy.Reputation = "beginer";
+                }
+                else if (repCount > 2)
+                {
+                    post.CreatedBy.Reputation = "Intermediat";
+                }
+                else if (repCount > 4)
+                {
+                    post.CreatedBy.Reputation = "pro";
+                }
                 _context.SaveChanges();
                 return Ok();                
             }
@@ -66,6 +79,19 @@ namespace AskMe.API
                     PostId = id,
                 };
                 post.DownVotes.Add(downVote);
+                var repCount = post.UpVotes.Count - post.DownVotes.Count;
+                if (repCount <= 2)
+                {
+                    post.CreatedBy.Reputation = "beginner";
+                }
+                else if (repCount > 2)
+                {
+                    post.CreatedBy.Reputation = "Intermediat";
+                }
+                else if (repCount > 4)
+                {
+                    post.CreatedBy.Reputation = "Pro";
+                }
                 _context.SaveChanges();
                 return Ok();
             }

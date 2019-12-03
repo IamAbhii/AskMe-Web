@@ -231,6 +231,10 @@
     <Compile Include="Migrations\201911281555095_AddedUpvotesAndDownVotes.Designer.cs">
       <DependentUpon>201911281555095_AddedUpvotesAndDownVotes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912030229300_AddedReputationProperty.cs" />
+    <Compile Include="Migrations\201912030229300_AddedReputationProperty.Designer.cs">
+      <DependentUpon>201912030229300_AddedReputationProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -516,6 +520,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911281555095_AddedUpvotesAndDownVotes.resx">
       <DependentUpon>201911281555095_AddedUpvotesAndDownVotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030229300_AddedReputationProperty.resx">
+      <DependentUpon>201912030229300_AddedReputationProperty.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

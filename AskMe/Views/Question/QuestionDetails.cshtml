@@ -15,6 +15,8 @@
         <div class="card bg-light m-1">
             <div class="card-body">
                 <h5 class="card-title">Answered by: @answer.Post.CreatedBy.UserName</h5>
+                <p>User Reputation: @answer.Post.CreatedBy.Reputation</p>
+
                 @Html.Raw(answer.Post.Content)
             </div>
             <div class="col vote">
@@ -23,6 +25,7 @@
                 </div>
                 <div class="Count">
                     @(answer.Post.UpVotes.Count-answer.Post.DownVotes.Count)
+
                 </div>
                 <div>
                     <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-down" href=""><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
