@@ -97,5 +97,20 @@ namespace AskMe.API
             }
             return BadRequest();
         }
+
+        public IHttpActionResult VerifyAnswer(int id)
+        {
+            var post = _context.Posts.Find(id);
+            var user = _context.Users.Find(User.Identity.GetUserId());
+
+            if (post.CreatedBy.Id == user.Id)
+            {
+                post.IsAnswerRight = true;
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
+
+
 }

@@ -41,6 +41,7 @@ namespace AskMe.Models
         public string CreatedById { get; set; }
         public virtual User CreatedBy { get; set; }
         public int Views { get; set; }
+        public bool? IsAnswerRight { get; set; }
         public virtual ICollection<UpVotes> UpVotes { get; set; }
         public virtual ICollection<DownVotes> DownVotes { get; set; }
     }

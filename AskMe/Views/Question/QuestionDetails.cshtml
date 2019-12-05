@@ -15,7 +15,7 @@
         <div class="card bg-light m-1">
             <div class="card-body">
                 <h5 class="card-title">Answered by: @answer.Post.CreatedBy.UserName</h5>
-                <p>User Reputation: @answer.Post.CreatedBy.Reputation</p>
+                <p>User Badge: @answer.Post.CreatedBy.Reputation</p>
 
                 @Html.Raw(answer.Post.Content)
             </div>
@@ -24,13 +24,26 @@
                     <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-up" href=""><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
                 </div>
                 <div class="Count">
-                    @(answer.Post.UpVotes.Count-answer.Post.DownVotes.Count)
+                    @(answer.Post.UpVotes.Count - answer.Post.DownVotes.Count)
 
                 </div>
                 <div>
                     <button data-vote-id="@answer.Post.PostId" class="nav-link thumbs-down" href=""><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
                 </div>
             </div>
+
+            <div class="answer">
+                <div class="answer-text">
+                    Answer Status:not verified yet
+                </div>
+                @if (Model.UserId == answer.Question.Post.CreatedById)
+                {
+                    <button data-answer-id="@answer.Post.PostId" class="answer-button">Mark as answered</button>
+
+                }
+            </div>
+
+
             @Html.ActionLink("View Comments", "Index", "Comments", new { answerId = answer.PostId }, null) |
         </div>
     }
@@ -76,7 +89,6 @@
                 prevText: "Previous",
                 nextText: "Next"
             });
-
             $(".vote").on("click", ".thumbs-up", function () {
                 var counter = $(this).closest(".vote").children(".Count");
                 $.ajax({
@@ -86,12 +98,11 @@
                         var countTxt = counter.text();
                         console.log(countTxt);
                         var count = parseInt(countTxt);
-                         counter.text(count + 1);
+                        counter.text(count + 1);
                         console.log(count);
                     }
                 })
             })
-
             $(".vote").on("click", ".thumbs-down", function () {
                 var counter = $(this).closest(".vote").children(".Count");
                 $.ajax({
@@ -101,11 +112,24 @@
                         var countTxt = counter.text();
                         console.log(countTxt);
                         var count = parseInt(countTxt);
-                         counter.text(count - 1);
+                        counter.text(count - 1);
                         console.log(count);
                     }
                 })
             })
+
+            $(".answer").on("click", ".answer-button", function () {
+                var counter = $(this).closest(".answer").children(".answer-text");
+                $.ajax({
+                    url: "/api/votes/VerifyAnswer/" + $(this).attr("data-answer-id"),
+                    method: "POST",
+                    success: function () {
+                        counter.text("Answer Status: verified ");
+                        console.log(counter.text());
+                    }
+                })
+            })
+
         });
     </script>
 }
